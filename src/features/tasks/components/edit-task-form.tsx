@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useCreateTask } from "../api/use-create-task";
 import { createTaskSchema } from "../schemas";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { DatePicker } from "@/components/date-picker";
@@ -29,33 +28,41 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
-import { TaskStatus } from "../types";
+import { Task, TaskStatus } from "../types";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
+import { useUpdateTask } from "../api/use-update-task";
 
-interface CreateTaskFormProps {
+interface EditTaskFormProps {
   onCancel?: () => void;
   projectOptions: { id: string; name: string; imageUrl: string }[];
   memberOptions: { id: string; name: string }[];
+  initialValues: Task;
 }
 
-export const CreateTaskForm = ({
+export const EditTaskForm = ({
   onCancel,
   projectOptions,
   memberOptions,
-}: CreateTaskFormProps) => {
+  initialValues,
+}: EditTaskFormProps) => {
   const workspaceId = useWorkspaceId();
   const router = useRouter();
-  const { mutate, isPending } = useCreateTask();
+  const { mutate, isPending } = useUpdateTask();
   const form = useForm<z.infer<typeof createTaskSchema>>({
-    resolver: zodResolver(createTaskSchema.omit({ workspaceId: true })),
+    resolver: zodResolver(
+      createTaskSchema.omit({ workspaceId: true, description: true })
+    ),
     defaultValues: {
-      workspaceId,
+      ...initialValues,
+      dueDate: initialValues.dueDate
+        ? new Date(initialValues.dueDate)
+        : undefined,
     },
   });
 
   const onSubmit = (values: z.infer<typeof createTaskSchema>) => {
     mutate(
-      { json: { ...values, workspaceId } },
+      { json: values, param: { taskId: initialValues.$id } },
       {
         onSuccess: () => {
           form.reset();
@@ -69,12 +76,12 @@ export const CreateTaskForm = ({
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
-        <CardTitle className="text-xl font-bold">Create A New Task</CardTitle>
+        <CardTitle className="text-xl font-bold">Edit Task</CardTitle>
       </CardHeader>
       <div className="px-7">
         <DottedSeparator />
       </div>
-      <CardContent className="p-7 mb-4 pb-4">
+      <CardContent className="p-7">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
@@ -212,7 +219,7 @@ export const CreateTaskForm = ({
               />
             </div>
             <DottedSeparator className="py-7" />
-            <div className="flex items-center mb-4 pb-4 gap-y-3 justify-between">
+            <div className="flex items-center mb-4 pb-4 justify-between">
               <Button
                 type="button"
                 size={"lg"}
@@ -224,10 +231,9 @@ export const CreateTaskForm = ({
                 Cancel
               </Button>
               <Button type="submit" size={"lg"} disabled={isPending}>
-                Create Task
+                Save Changes
               </Button>
             </div>
-            <DottedSeparator className="py-7" />
           </form>
         </Form>
       </CardContent>
