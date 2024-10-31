@@ -67,7 +67,7 @@ export const CreateTaskForm = ({
   };
 
   return (
-    <Card className="w-full h-full border-none shadow-none">
+    <Card className="w-full h-full py-4 border-none shadow-none">
       <CardHeader className="flex p-7">
         <CardTitle className="text-xl font-bold">Create A New Task</CardTitle>
       </CardHeader>
@@ -227,7 +227,6 @@ export const CreateTaskForm = ({
                 Create Task
               </Button>
             </div>
-            <DottedSeparator className="py-7" />
           </form>
         </Form>
       </CardContent>
