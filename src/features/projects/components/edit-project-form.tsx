@@ -12,19 +12,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import Image from "next/image";
-import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 import { useUpdateProject } from "../api/use-update-project";
 import { UseConfirm } from "@/hooks/use-confirm";
-import { toast } from "sonner";
+
 import { updateProjectSchema } from "../schemas";
 import { Project } from "../types";
 import { useDeleteProject } from "../api/use-delete-project";
@@ -245,7 +245,7 @@ export const EditProjectForm = ({
               size={"sm"}
               variant={"destructive"}
               type="button"
-              disabled={isPending}
+              disabled={isPending || isDeletingProject}
               onClick={handleDelete}
             >
               Delete Project
