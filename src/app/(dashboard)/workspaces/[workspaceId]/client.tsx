@@ -37,7 +37,7 @@ export const WorkspaceIdClient = () => {
     workspaceId,
   });
 
-  const { open: createProject } = useCreateProjectModal();
+  //  const { open: createProject } = useCreateProjectModal();
 
   const isLoading =
     isLoadingAnalytics ||
