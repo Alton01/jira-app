@@ -129,7 +129,7 @@ export const SignUpCard = () => {
         <DottedSeparator />
       </div>
       <CardContent className="p-7 flex flex-col gap-y-4">
-        <Button
+        {/*}   <Button
           disabled={isPending}
           variant="secondary"
           size="lg"
@@ -137,7 +137,7 @@ export const SignUpCard = () => {
         >
           <FcGoogle className="mr-2 size-5" />
           Login With Google
-        </Button>
+        </Button> */}
         <Button
           disabled={isPending}
           variant="secondary"
